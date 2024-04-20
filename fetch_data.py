@@ -3,6 +3,7 @@ import logging
 from yahoo_oauth import OAuth2
 import yahoo_fantasy_api as yfa
 from datetime import datetime
+from db_connection import db
 
 # Suppress yahoo_oauth log messages unless there's an error
 logging.getLogger('yahoo_oauth').setLevel(logging.ERROR)
@@ -19,6 +20,7 @@ last_years_league = yfa.League(oauth, '422.l.115216')
 
 # Get the league standings and pretty-print them
 standings = this_years_league.standings()
+print("THIS IS STANDINGS")
 print(json.dumps(standings, indent=4))
 
 teams = this_years_league.teams()
@@ -44,7 +46,7 @@ team_names = []
 # # print the team names
 for team in standings:
   team_names.append(team['name'])
-print(team_names)
+print("this is team_names", team_names)
 
 # #Get team key
 team_key = this_years_league.team_key()
@@ -56,4 +58,4 @@ print("team: ", team)
 
 # #get team stuff
 roster = team.roster()
-print("roster: ", roster)
+# print("roster: ", roster)
