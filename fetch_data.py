@@ -4,6 +4,7 @@ from yahoo_oauth import OAuth2
 import yahoo_fantasy_api as yfa
 from datetime import datetime
 from db_connection import db
+import os
 
 # Suppress yahoo_oauth log messages unless there's an error
 logging.getLogger('yahoo_oauth').setLevel(logging.ERROR)
@@ -12,7 +13,7 @@ logging.getLogger('yahoo_oauth').setLevel(logging.ERROR)
 TEAM_NAMES = ['AAA Chiefs', "Jordan's World-Class Team", 'AA Chiefs', 'The Toronto Blue Jays', 'Laurie’s Permacks', 'Riber Hites Kardenles']
 TEAM_IDS= ['422.l.115216.t.1', '422.l.115216.t.2', '422.l.115216.t.3', '422.l.115216.t.4', '422.l.115216.t.5', '422.l.115216.t.6']
 # Authenticate with the Yahoo API
-oauth = OAuth2(None, None, from_file='env\\Scripts\\oauth2.json')
+oauth = OAuth2(None, None, from_file=os.path.join('config', 'oauth2.json'))
 
 # Use the oauth object to create a League object
 this_years_league = yfa.League(oauth, '431.l.51071')
