@@ -18,26 +18,28 @@ this_years_league = yfa.League(oauth, '431.l.51071')
 last_years_league = yfa.League(oauth, '422.l.115216')
 
 # Get the league standings and pretty-print them
-# standings = last_years_league.standings()
-# print(json.dumps(standings, indent=4))
+standings = this_years_league.standings()
+print(json.dumps(standings, indent=4))
 
-teams = last_years_league.teams()
+teams = this_years_league.teams()
 for team in teams:
   print(team)
 
 
 # Get the team object
-team = last_years_league.to_team(TEAM_IDS[0])
+team = this_years_league.to_team(TEAM_IDS[0])
 
 # Specify the date
 date = datetime(2023, 9, 4)
 
 # Get the team's roster for the specified date
-roster = team.roster(date)
+# We can't do this because MLB doesn't let you check rosters for past dates
+# We should probably start our own DB that keeps the historical records
+# roster = team.roster(date)
 
 # Print the roster
-print(f"Roster on {date}: {roster}")
-# team_names = []
+# print(f"Roster on {date}: {roster}")
+team_names = []
 
 # # print the team names
 for team in standings:
@@ -45,11 +47,11 @@ for team in standings:
 print(team_names)
 
 # #Get team key
-team_key = last_years_league.team_key()
+team_key = this_years_league.team_key()
 print('team key: ', team_key)
 
 # # get team object
-team = last_years_league.to_team(team_key)
+team = this_years_league.to_team(team_key)
 print("team: ", team)
 
 # #get team stuff
