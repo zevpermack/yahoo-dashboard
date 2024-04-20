@@ -9,6 +9,8 @@ import os
 # Suppress yahoo_oauth log messages unless there's an error
 logging.getLogger('yahoo_oauth').setLevel(logging.ERROR)
 
+database = db
+
 # CONSTANTS LAST YEAR
 TEAM_NAMES = ['AAA Chiefs', "Jordan's World-Class Team", 'AA Chiefs', 'The Toronto Blue Jays', 'Laurie’s Permacks', 'Riber Hites Kardenles']
 TEAM_IDS= ['422.l.115216.t.1', '422.l.115216.t.2', '422.l.115216.t.3', '422.l.115216.t.4', '422.l.115216.t.5', '422.l.115216.t.6']

@@ -1,12 +1,9 @@
 import os
 import psycopg2
-from dotenv import load_dotenv
 
 def local_connect():
     """ Connect to the PostgreSQL database server """
     try:
-        # Load environment variables from .env file
-        load_dotenv()
 
         # Get database connection parameters from environment variables
         config = {
