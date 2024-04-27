@@ -13,14 +13,12 @@ def lambda_handler(event, context):
     # Suppress yahoo_oauth log messages unless there's an error
     logging.getLogger("yahoo_oauth").setLevel(logging.ERROR)
 
-    database = db
-
     # Authenticate with the Yahoo API
     oauth = OAuth2(None, None, from_file=os.path.join("config", "oauth2.json"))
 
     # Use the oauth object to create a League object
     this_years_league = yfa.League(oauth, "431.l.51071")
-    last_years_league = yfa.League(oauth, "422.l.115216")
+    # last_years_league = yfa.League(oauth, "422.l.115216")
 
     # Get the league standings
     standings = this_years_league.standings()
