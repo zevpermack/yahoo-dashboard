@@ -30,4 +30,6 @@ jobs:
           aws configure set default.region us-east-1
           zip -r lambda.zip .
           aws lambda update-function-code --function-name get_fantasy_scores --zip-file fileb://lambda.zip
+          echo "Waiting for the function update to complete..."
+          sleep 60
           aws lambda update-function-configuration --function-name get_fantasy_scores --environment "Variables={DEVELOPMENT=${{ secrets.DEVELOPMENT }},SUPABASE_URL=${{ secrets.SUPABASE_URL }},SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}}"
