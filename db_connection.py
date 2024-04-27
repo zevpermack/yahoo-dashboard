@@ -8,7 +8,7 @@ load_dotenv()
 db = None
 
 # Check if we're running in development mode
-if os.getenv('DEVELOPMENT'):
+if os.getenv("DEVELOPMENT") == "true":
     # Connect to the local database
     db = local_connect()
 else:

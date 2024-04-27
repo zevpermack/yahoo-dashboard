@@ -5,60 +5,68 @@ import yahoo_fantasy_api as yfa
 from datetime import datetime
 from db_connection import db
 import os
+from constants import CURRENT_MANAGERS, BATTER_STATS, PITCHER_STATS
+import sys
 
 # Suppress yahoo_oauth log messages unless there's an error
-logging.getLogger('yahoo_oauth').setLevel(logging.ERROR)
+logging.getLogger("yahoo_oauth").setLevel(logging.ERROR)
 
 database = db
 
-# CONSTANTS LAST YEAR
-TEAM_NAMES = ['AAA Chiefs', "Jordan's World-Class Team", 'AA Chiefs', 'The Toronto Blue Jays', 'Laurie’s Permacks', 'Riber Hites Kardenles']
-TEAM_IDS= ['422.l.115216.t.1', '422.l.115216.t.2', '422.l.115216.t.3', '422.l.115216.t.4', '422.l.115216.t.5', '422.l.115216.t.6']
 # Authenticate with the Yahoo API
-oauth = OAuth2(None, None, from_file=os.path.join('config', 'oauth2.json'))
+oauth = OAuth2(None, None, from_file=os.path.join("config", "oauth2.json"))
 
 # Use the oauth object to create a League object
-this_years_league = yfa.League(oauth, '431.l.51071')
-last_years_league = yfa.League(oauth, '422.l.115216')
+this_years_league = yfa.League(oauth, "431.l.51071")
+last_years_league = yfa.League(oauth, "422.l.115216")
 
-# Get the league standings and pretty-print them
+# Get the league standings
 standings = this_years_league.standings()
-print("THIS IS STANDINGS")
-print(json.dumps(standings, indent=4))
-
-teams = this_years_league.teams()
-for team in teams:
-  print(team)
+print(standings)
 
 
+team_stats_table = db.table("team_stats")
+
+for team_stats in standings:
+    team_key = team_stats["team_key"]
+    team_stats_table.upsert(
+        {
+            "team_key": team_key,
+            "rank": team_stats["rank"],
+            "points_for": team_stats["points_for"],
+            "points_change": team_stats["points_change"],
+            "points_back": team_stats["points_back"],
+        }
+    ).execute()
+
+# # Insert today's stats
+# db.table("team_stats").insert(
+#     {
+#         "team_key": team["team_key"],
+#         "date": datetime.date.today(),
+#         "rank": team["rank"],
+#         "points_for": team["points_for"],
+#         "points_change": team["points_change"],
+#         "points_back": team["points_back"],
+#     }
+# )
 # Get the team object
-team = this_years_league.to_team(TEAM_IDS[0])
-
-# Specify the date
-date = datetime(2023, 9, 4)
+# for manager in CURRENT_MANAGERS:
+#     team = this_years_league.to_team(CURRENT_MANAGERS[manager]["team_key"])
+#     roster = team.roster()
+#     for player in roster:
+#         player_id = player["player_id"]
+#         player_stats = this_years_league.player_stats(player_id, "date")
+#         print(player_stats)
+#         break
+# print(team.roster)
+# this_years_league.player_details("12562")
+# print(this_years_league.player_stats("12562", "date"))
+# this_years_league.stat_categories()
+# print(datetime.now().date())
 
 # Get the team's roster for the specified date
 # We can't do this because MLB doesn't let you check rosters for past dates
 # We should probably start our own DB that keeps the historical records
-# roster = team.roster(date)
-
-# Print the roster
-# print(f"Roster on {date}: {roster}")
-team_names = []
-
-# # print the team names
-for team in standings:
-  team_names.append(team['name'])
-print("this is team_names", team_names)
-
-# #Get team key
-team_key = this_years_league.team_key()
-print('team key: ', team_key)
-
-# # get team object
-team = this_years_league.to_team(team_key)
-print("team: ", team)
-
-# #get team stuff
-roster = team.roster()
-# print("roster: ", roster)
+# roster = team.roster()
+# print(roster)
