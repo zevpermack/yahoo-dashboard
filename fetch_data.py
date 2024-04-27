@@ -24,6 +24,9 @@ def lambda_handler(event, context):
 
     team_stats_table = db.table("team_stats")
 
+    response = team_stats_table.select("*").execute()
+    initial_count = len(response.data)
+
     for team_stats in standings:
         team_key = team_stats["team_key"]
         team_stats_table.upsert(
@@ -36,17 +39,11 @@ def lambda_handler(event, context):
             }
         ).execute()
 
-    # # Insert today's stats
-    # db.table("team_stats").insert(
-    #     {
-    #         "team_key": team["team_key"],
-    #         "date": datetime.date.today(),
-    #         "rank": team["rank"],
-    #         "points_for": team["points_for"],
-    #         "points_change": team["points_change"],
-    #         "points_back": team["points_back"],
-    #     }
-    # )
+    response = team_stats_table.select("*").execute()
+    final_count = len(response["data"])
+
+    print(f"Initial count: {initial_count}, Final count: {final_count}")
+
     # Get the team object
     # for manager in CURRENT_MANAGERS:
     #     team = this_years_league.to_team(CURRENT_MANAGERS[manager]["team_key"])
@@ -67,3 +64,7 @@ def lambda_handler(event, context):
     # We should probably start our own DB that keeps the historical records
     # roster = team.roster()
     # print(roster)
+
+
+if __name__ == "__main__":
+    lambda_handler(None, None)

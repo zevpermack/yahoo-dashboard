@@ -1,6 +1,5 @@
 import os
 from supabase import create_client, Client
-from local_db_connect import local_connect
 from dotenv import load_dotenv
 
 load_dotenv()
