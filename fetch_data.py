@@ -1,7 +1,6 @@
 import logging
 from yahoo_oauth import OAuth2
 import yahoo_fantasy_api as yfa
-from db_connection import db
 import os
 from constants import CURRENT_MANAGERS, BATTER_STATS, PITCHER_STATS
 from supabase import create_client
