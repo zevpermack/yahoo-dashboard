@@ -4,9 +4,21 @@ import yahoo_fantasy_api as yfa
 from db_connection import db
 import os
 from constants import CURRENT_MANAGERS, BATTER_STATS, PITCHER_STATS
+from supabase import create_client
+from dotenv import load_dotenv
 
 
 def lambda_handler(event, context):
+
+    load_dotenv()
+    # Initialize the db variable
+    db = None
+
+    # Connect to the Supabase database
+    url: str = os.getenv("SUPABASE_URL")
+    key: str = os.getenv("SUPABASE_KEY")
+    db = create_client(url, key)
+
     # Suppress yahoo_oauth log messages unless there's an error
     logging.getLogger("yahoo_oauth").setLevel(logging.ERROR)
 

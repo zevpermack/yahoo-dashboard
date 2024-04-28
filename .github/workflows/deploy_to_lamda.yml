@@ -13,12 +13,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
 
-      - name: Build Lambda package
+      - name: Install dependencies
         run: |
-          docker run --rm -v $(pwd):/var/task:z lambci/lambda:build-python3.8 /bin/sh -c "pip install -r requirements.txt -t python && rsync -av --progress . python --exclude python && zip -r lambda.zip python"
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Create Lambda package
+        run: |
+          mkdir package
+          pip install -r requirements.txt -t package/
+          cp -r . package/
+          cd package
+          zip -r ../lambda.zip .
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
