@@ -40,7 +40,7 @@ def lambda_handler(event, context):
         ).execute()
 
     response = team_stats_table.select("*").execute()
-    final_count = len(response["data"])
+    final_count = len(response.data)
 
     print(f"Initial count: {initial_count}, Final count: {final_count}")
 
