@@ -1,1 +1,1 @@
-{"errorMessage": "Unable to import module 'fetch_data': No module named 'yahoo_oauth'", "errorType": "Runtime.ImportModuleError", "requestId": "b0558f13-c736-4466-b6ff-2121fa88211b", "stackTrace": []}
+{"errorMessage": "Unable to import module 'fetch_data': No module named 'pydantic_core._pydantic_core'", "errorType": "Runtime.ImportModuleError", "requestId": "609bac7d-8406-40f6-abbe-64cf630a4037", "stackTrace": []}
