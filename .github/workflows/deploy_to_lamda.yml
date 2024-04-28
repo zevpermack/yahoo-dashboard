@@ -18,7 +18,7 @@ jobs:
 
       - name: Build Lambda package
         run: |
-          docker run --rm -v $(pwd):/var/task -w /var/task lambci/lambda:build-python3.11 pip install -r requirements.txt -t .
+          docker run --rm -v $(pwd):/var/task -w /var/task lambci/lambda:build-python3.8 pip install -r requirements.txt -t .
           zip -r lambda.zip .
 
       - name: Configure AWS credentials
