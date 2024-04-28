@@ -25,11 +25,7 @@ jobs:
 
       - name: Create Lambda package
         run: |
-          mkdir package
-          pip install --platform manylinux2014_aarch64 --target=package --implementation cp --python-version 3.9 --only-binary=:all: --upgrade -r requirements.txt
-          cp fetch_data.py constants.py package/
-          cd package
-          zip -r ../lambda.zip .
+          docker run -v $(pwd):/var/task:z lambci/lambda:build-python3.9 /bin/sh -c "pip install -r requirements.txt -t .; zip -r ../lambda.zip ."
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
