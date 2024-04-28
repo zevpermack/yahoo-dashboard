@@ -27,6 +27,7 @@ jobs:
         run: |
           mkdir package
           pip install --platform manylinux2014_aarch64 --target=package --implementation cp --python-version 3.9 --only-binary=:all: --upgrade -r requirements.txt
+          pip install --target=package --no-binary=:all: docopt==0.6.2
           cp fetch_data.py constants.py package/
           cd package
           zip -r ../lambda.zip .
