@@ -1,1 +1,1 @@
-{"errorMessage": "Unable to import module 'fetch_data': No module named 'pydantic_core._pydantic_core'", "errorType": "Runtime.ImportModuleError", "requestId": "ab038b3c-7671-46ed-b0c7-0e552f7fb84b", "stackTrace": []}
+{"errorMessage": "Unable to import module 'fetch_data': No module named 'pydantic_core._pydantic_core'", "errorType": "Runtime.ImportModuleError", "requestId": "d5bed9ab-e325-4e6f-84bf-52e2a7143b05", "stackTrace": []}
