@@ -35,6 +35,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy to Lambda
+        working-directory: ./
         run: |
           aws lambda update-function-code --function-name get_fantasy_scores --zip-file fileb://lambda.zip
           echo "Deployment successful - sleeping for 10 seconds to allow the function to update before uploading env vars..."
