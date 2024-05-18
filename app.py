@@ -7,7 +7,7 @@ from supabase import create_client
 from dotenv import load_dotenv
 
 
-def lambda_handler(event, context):
+def handler(event, context):
 
     load_dotenv()
     # Initialize the db variable
@@ -52,7 +52,8 @@ def lambda_handler(event, context):
     response = team_stats_table.select("*").execute()
     final_count = len(response.data)
 
-    print(f"Initial count: {initial_count}, Final count: {final_count}")
+    result = f"Initial count: {initial_count}, Final count: {final_count}"
+    return {"statusCode": 200, "body": result}
 
     # Get the team object
     # for manager in CURRENT_MANAGERS:
@@ -77,4 +78,4 @@ def lambda_handler(event, context):
 
 
 if __name__ == "__main__":
-    lambda_handler(None, None)
+    handler(None, None)
