@@ -40,6 +40,7 @@ def handler(event, context):
         token_time=token_time,
         refresh_token=refresh_token,
         token_type=token_type,
+        from_file="/tmp/secrets.json",
     )
 
     # Use the oauth object to create a League object
