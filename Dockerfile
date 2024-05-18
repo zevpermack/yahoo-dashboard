@@ -2,18 +2,9 @@ FROM public.ecr.aws/lambda/python:3.12
 
 ENV LAMBDA_TASK_ROOT=/var/task
 
-
-RUN echo "LAMBDA_TASK_ROOT: ${LAMBDA_TASK_ROOT}"
-RUN echo "PWD: $(pwd)"
 # Copy function code
 COPY app.py ${LAMBDA_TASK_ROOT}
 COPY constants.py ${LAMBDA_TASK_ROOT}
-COPY config ${LAMBDA_TASK_ROOT}/config
-
-# List contents of ${LAMBDA_TASK_ROOT}
-RUN ls -la ${LAMBDA_TASK_ROOT}
-# List contents of ${LAMBDA_TASK_ROOT}
-RUN ls -la ${LAMBDA_TASK_ROOT}
 
 # Avoid cache purge by adding requirements first
 COPY requirements.txt ${LAMBDA_TASK_ROOT}

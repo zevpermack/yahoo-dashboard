@@ -7,6 +7,18 @@ from supabase import create_client
 from dotenv import load_dotenv
 
 
+# Authenticate with the Yahoo API
+access_token = os.getenv("ACCESS_TOKEN")
+consumer_key = os.getenv("CONSUMER_KEY")
+consumer_secret = os.getenv("CONSUMER_SECRET")
+guid = os.getenv("GUID")
+if guid == "null":
+    guid = None
+refresh_token = os.getenv("REFRESH_TOKEN")
+token_time = float(os.getenv("TOKEN_TIME"))
+token_type = os.getenv("TOKEN_TYPE")
+
+
 def handler(event, context):
 
     load_dotenv()
@@ -21,8 +33,14 @@ def handler(event, context):
     # Suppress yahoo_oauth log messages unless there's an error
     logging.getLogger("yahoo_oauth").setLevel(logging.ERROR)
 
-    # Authenticate with the Yahoo API
-    oauth = OAuth2(None, None, from_file=os.path.join("config", "oauth2.json"))
+    oauth = OAuth2(
+        consumer_key,
+        consumer_secret,
+        access_token=access_token,
+        token_time=token_time,
+        refresh_token=refresh_token,
+        token_type=token_type,
+    )
 
     # Use the oauth object to create a League object
     this_years_league = yfa.League(oauth, "431.l.51071")
