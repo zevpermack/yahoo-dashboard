@@ -6,12 +6,6 @@ from constants import CURRENT_MANAGERS, BATTER_STATS, PITCHER_STATS
 from supabase import create_client
 from dotenv import load_dotenv
 
-
-class MyOAuth2(OAuth2):
-    def refresh_access_token(self, token_from_file=None):
-        return self.access_token
-
-
 # Authenticate with the Yahoo API
 access_token = os.getenv("ACCESS_TOKEN")
 consumer_key = os.getenv("CONSUMER_KEY")
@@ -45,6 +39,7 @@ def handler(event, context):
         token_time=token_time,
         refresh_token=refresh_token,
         token_type=token_type,
+        from_file="/tmp/secrets.json",
     )
 
     # Use the oauth object to create a League object
