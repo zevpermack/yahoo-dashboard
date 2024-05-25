@@ -5,22 +5,24 @@ import os
 from constants import CURRENT_MANAGERS, BATTER_STATS, PITCHER_STATS
 from supabase import create_client
 from dotenv import load_dotenv
-
-# Authenticate with the Yahoo API
-access_token = os.getenv("ACCESS_TOKEN")
-consumer_key = os.getenv("CONSUMER_KEY")
-consumer_secret = os.getenv("CONSUMER_SECRET")
-guid = os.getenv("GUID")
-if guid == "null":
-    guid = None
-refresh_token = os.getenv("REFRESH_TOKEN")
-token_time = float(os.getenv("TOKEN_TIME"))
-token_type = os.getenv("TOKEN_TYPE")
+import json
 
 
 def handler(event, context):
 
     load_dotenv()
+
+    # Authenticate with the Yahoo API
+    access_token = os.getenv("ACCESS_TOKEN")
+    consumer_key = os.getenv("CONSUMER_KEY")
+    consumer_secret = os.getenv("CONSUMER_SECRET")
+    guid = os.getenv("GUID")
+    if guid == "null":
+        guid = None
+    refresh_token = os.getenv("REFRESH_TOKEN")
+    token_time = float(os.getenv("TOKEN_TIME"))
+    token_type = os.getenv("TOKEN_TYPE")
+
     # Initialize the db variable
     db = None
 
@@ -32,6 +34,25 @@ def handler(event, context):
     # Suppress yahoo_oauth log messages unless there's an error
     logging.getLogger("yahoo_oauth").setLevel(logging.ERROR)
 
+    if os.getenv("AWS_EXECUTION_ENV") != "None":
+        file_path = "/tmp/secrets.json"
+    else:
+        file_path = "secrets.json"  # Adjust this path as needed
+
+    with open(file_path, "w") as f:
+        json.dump(
+            {
+                "access_token": access_token,
+                "consumer_key": consumer_key,
+                "consumer_secret": consumer_secret,
+                "guid": guid,
+                "token_time": token_time,
+                "refresh_token": refresh_token,
+                "token_type": token_type,
+            },
+            f,
+        )
+
     oauth = OAuth2(
         consumer_key,
         consumer_secret,
@@ -39,7 +60,6 @@ def handler(event, context):
         token_time=token_time,
         refresh_token=refresh_token,
         token_type=token_type,
-        from_file="/tmp/secrets.json",
     )
 
     # Use the oauth object to create a League object

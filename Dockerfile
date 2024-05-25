@@ -5,6 +5,7 @@ ENV LAMBDA_TASK_ROOT=/var/task
 # Copy function code
 COPY app.py ${LAMBDA_TASK_ROOT}
 COPY constants.py ${LAMBDA_TASK_ROOT}
+COPY tmp ${LAMBDA_TASK_ROOT}/tmp
 
 # Avoid cache purge by adding requirements first
 COPY requirements.txt ${LAMBDA_TASK_ROOT}
