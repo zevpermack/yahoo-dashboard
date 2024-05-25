@@ -34,25 +34,6 @@ def handler(event, context):
     # Suppress yahoo_oauth log messages unless there's an error
     logging.getLogger("yahoo_oauth").setLevel(logging.ERROR)
 
-    if os.getenv("AWS_EXECUTION_ENV") != "None":
-        file_path = "/tmp/secrets.json"
-    else:
-        file_path = "secrets.json"  # Adjust this path as needed
-
-    with open(file_path, "w") as f:
-        json.dump(
-            {
-                "access_token": access_token,
-                "consumer_key": consumer_key,
-                "consumer_secret": consumer_secret,
-                "guid": guid,
-                "token_time": token_time,
-                "refresh_token": refresh_token,
-                "token_type": token_type,
-            },
-            f,
-        )
-
     oauth = OAuth2(
         consumer_key,
         consumer_secret,
@@ -73,7 +54,10 @@ def handler(event, context):
 
     team_stats_table = db.table("team_stats")
 
-    response = team_stats_table.select("*").execute()
+    try:
+        response = team_stats_table.select("*").execute()
+    except Exception as e:
+        print(e)
     initial_count = len(response.data)
 
     for team_stats in standings:
@@ -88,7 +72,10 @@ def handler(event, context):
             }
         ).execute()
 
-    response = team_stats_table.select("*").execute()
+    try:
+        response = team_stats_table.select("*").execute()
+    except Exception as e:
+        print(e)
     final_count = len(response.data)
 
     result = f"Initial count: {initial_count}, Final count: {final_count}"
