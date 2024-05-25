@@ -56,6 +56,7 @@ def handler(event, context):
     oauth = OAuth2(
         consumer_key,
         consumer_secret,
+        store_file=False,
         access_token=access_token,
         token_time=token_time,
         refresh_token=refresh_token,
