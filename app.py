@@ -5,7 +5,7 @@ import os
 from constants import CURRENT_MANAGERS, BATTER_STATS, PITCHER_STATS
 from supabase import create_client
 from dotenv import load_dotenv
-import json
+from datetime import datetime, timezone
 
 
 def handler(event, context):
@@ -60,6 +60,22 @@ def handler(event, context):
         print(e)
     initial_count = len(response.data)
 
+    # Get today's date in UTC
+    today = datetime.now(timezone.utc).date()
+
+    # Check if the first response has any entries from today's date
+    for entry in response.data:
+        # Parse the 'created_at' timestamp into a datetime object and convert it to a date
+        entry_date = datetime.strptime(
+            entry["created_at"], "%Y-%m-%dT%H:%M:%S.%f+00:00"
+        ).date()
+        if (
+            entry_date.year == today.year
+            and entry_date.month == today.month
+            and entry_date.day == today.day
+        ):
+            return {"statusCode": 200, "body": "Entry from today's date already exists"}
+
     for team_stats in standings:
         team_key = team_stats["team_key"]
         team_stats_table.upsert(
@@ -80,27 +96,6 @@ def handler(event, context):
 
     result = f"Initial count: {initial_count}, Final count: {final_count}"
     return {"statusCode": 200, "body": result}
-
-    # Get the team object
-    # for manager in CURRENT_MANAGERS:
-    #     team = this_years_league.to_team(CURRENT_MANAGERS[manager]["team_key"])
-    #     roster = team.roster()
-    #     for player in roster:
-    #         player_id = player["player_id"]
-    #         player_stats = this_years_league.player_stats(player_id, "date")
-    #         print(player_stats)
-    #         break
-    # print(team.roster)
-    # this_years_league.player_details("12562")
-    # print(this_years_league.player_stats("12562", "date"))
-    # this_years_league.stat_categories()
-    # print(datetime.now().date())
-
-    # Get the team's roster for the specified date
-    # We can't do this because MLB doesn't let you check rosters for past dates
-    # We should probably start our own DB that keeps the historical records
-    # roster = team.roster()
-    # print(roster)
 
 
 if __name__ == "__main__":
