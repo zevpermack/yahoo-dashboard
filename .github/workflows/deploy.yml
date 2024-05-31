@@ -38,3 +38,13 @@ jobs:
           aws lambda update-function-code \
               --function-name pull-leaderboard-fantasy-data \
               --image-uri 779533547175.dkr.ecr.us-east-1.amazonaws.com/yahoo-dashboard-ecr:latest
+
+      - name: Delete old ECR images
+        uses: LeiaInc/devops-delete-old-aws-ecr-images@v1
+        with:
+          repo-name: yahoo-dashboard-ecr
+          qtd-images: 1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
