@@ -40,11 +40,11 @@ jobs:
               --image-uri 779533547175.dkr.ecr.us-east-1.amazonaws.com/yahoo-dashboard-ecr:latest
 
       - name: Delete old ECR images
-        uses: LeiaInc/devops-delete-old-aws-ecr-images@v1
-        with:
-          repo-name: yahoo-dashboard-ecr
-          qtd-images: 1
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: us-east-1
+        run: |
+          # Get the image digests for all but the most recent image
+          OLD_IMAGES=$(aws ecr list-images --repository-name yahoo-dashboard-ecr --query 'sort_by(imageIds[?type(imageTag)!=`null`],&imagePushedAt)[0:-1].[imageDigest]' --output text)
+
+          # Delete the old images
+          for IMAGE in $OLD_IMAGES; do
+            aws ecr batch-delete-image --repository-name yahoo-dashboard-ecr --image-ids imageDigest=$IMAGE
+          done
