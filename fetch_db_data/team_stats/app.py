@@ -33,6 +33,8 @@ def handler(event, context):
 
     # Suppress yahoo_oauth log messages unless there's an error
     logging.getLogger("yahoo_oauth").setLevel(logging.ERROR)
+    # Set logging ability for script
+    logging.basicConfig(level=logging.INFO)
 
     oauth = OAuth2(
         consumer_key,
@@ -74,6 +76,7 @@ def handler(event, context):
             and entry_date.month == today.month
             and entry_date.day == today.day
         ):
+            logging.info("Entry from today's date already exists")
             return {"statusCode": 200, "body": "Entry from today's date already exists"}
 
     for team_stats in standings:
@@ -95,6 +98,7 @@ def handler(event, context):
     final_count = len(response.data)
 
     result = f"Initial count: {initial_count}, Final count: {final_count}"
+    logging.info(f"Response: {response}")
     return {"statusCode": 200, "body": result}
 
 
